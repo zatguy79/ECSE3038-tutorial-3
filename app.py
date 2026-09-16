@@ -10,8 +10,6 @@ readings = [
     {"name": "patio",      "room": "outside", "temp": 29.8, "online": True},
 ]
 
-online_list = []
-
 def hottest(data: list[dict]) -> dict:
     if not data:
         raise HTTPException(status_code=444, detail="No readings available")
@@ -28,6 +26,7 @@ def average_temp(R):
         return avg_temp
 
 def only_online(data: list[dict]):
+    online_list = []
     for index, item in enumerate(readings):
         for key, value in readings[index].items():
             if value == True:
@@ -45,3 +44,11 @@ async def hottest_devices():
 @app.get("/devices/online")
 async def online_devices():
     return only_online(readings)
+
+@app.get("/devices/{name}")  
+async def get_name(name):  
+    for item in readings:
+        if item["name"] == name:
+            return item 
+    raise HTTPException(status_code=404, detail=f"No device called '{name}' ")
+ 
