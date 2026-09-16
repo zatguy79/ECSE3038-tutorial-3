@@ -32,3 +32,7 @@ def average_temp(R):
 #average_temp(devices)
 
 #hottest(devices)
+
+@app.get("/devices")
+async def all_devices():
+    return readings
