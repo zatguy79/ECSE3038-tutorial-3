@@ -10,15 +10,13 @@ readings = [
     {"name": "patio",      "room": "outside", "temp": 29.8, "online": True},
 ]
 
-def hottest(E):
-        T_temp = 0
-        for index, item in enumerate(readings):
-            for key, value in readings[index].items():
-                if key == E[2]:
-                    if value > T_temp:
-                        T_temp = value
-                        T_temp_dict = readings[index]
-        print(T_temp_dict)
+T_temp_dict = {}
+
+def hottest(data: list[dict]) -> dict:
+    if not data:
+        raise HTTPException(status_code=444, detail="No readings available")
+    # Python's built-in max function directly finds the item with the highest temp
+    return max(data, key=lambda item: item["temp"])
 
 def average_temp(R):
         temp = 0
@@ -27,12 +25,16 @@ def average_temp(R):
                 if key == R[2]:
                     temp = temp + value 
         avg_temp = temp/len(readings)
-        print(avg_temp)
+        return avg_temp
 
 #average_temp(devices)
-
-#hottest(devices)
 
 @app.get("/devices")
 async def all_devices():
     return readings
+
+@app.get("/devices/hottest")
+async def hottest_devices():
+    return hottest(readings)
+
+hottest(readings)
