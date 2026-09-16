@@ -10,7 +10,7 @@ readings = [
     {"name": "patio",      "room": "outside", "temp": 29.8, "online": True},
 ]
 
-T_temp_dict = {}
+online_list = []
 
 def hottest(data: list[dict]) -> dict:
     if not data:
@@ -27,7 +27,12 @@ def average_temp(R):
         avg_temp = temp/len(readings)
         return avg_temp
 
-#average_temp(devices)
+def only_online(data: list[dict]):
+    for index, item in enumerate(readings):
+        for key, value in readings[index].items():
+            if value == True:
+                online_list.append(readings[index])
+    return online_list
 
 @app.get("/devices")
 async def all_devices():
@@ -37,4 +42,6 @@ async def all_devices():
 async def hottest_devices():
     return hottest(readings)
 
-hottest(readings)
+@app.get("/devices/online")
+async def online_devices():
+    return only_online(readings)
