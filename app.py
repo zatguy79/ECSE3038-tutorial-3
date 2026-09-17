@@ -18,12 +18,12 @@ def hottest(data: list[dict]) -> dict:
 
 def average_temp(R):
         temp = 0
-        for index, item in enumerate(readings):
-            for key, value in readings[index].items():
-                if key == R[2]:
+        for index, item in enumerate(R):
+            for key, value in R[index].items():
+                if key == "temp":
                     temp = temp + value 
         avg_temp = temp/len(readings)
-        return avg_temp
+        return round(avg_temp, 2)
 
 def only_online(data: list[dict]):
     online_list = []
@@ -51,4 +51,8 @@ async def get_name(name):
         if item["name"] == name:
             return item 
     raise HTTPException(status_code=404, detail=f"No device called '{name}' ")
+
+@app.get("/stats")
+async def temp_avg():
+    return {"average_temperature": average_temp(readings)}
  
