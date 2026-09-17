@@ -60,3 +60,13 @@ async def temp_avg():
 async def create_device(device: dict): 
     readings.append(device)    
     return device 
+
+@app.get("/rooms/{room}/devices")
+async def every_room(room: str):
+    room_list = []
+    for item in readings:
+        if item.get("room") == room:
+            room_list.append(item)
+    if len(room_list) == 0:
+        raise HTTPException(status_code=404, detail = f"No room called {room}")
+    return room_list
